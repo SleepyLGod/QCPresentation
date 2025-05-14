@@ -1,0 +1,4 @@
+pdflatex iclr2025_conference.tex
+bibtex iclr2025_conference
+pdflatex iclr2025_conference.tex
+pdflatex iclr2025_conference.tex

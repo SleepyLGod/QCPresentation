@@ -27,10 +27,10 @@
 \frame[plain]{\maketitle}
 
 % --- TOPIC INTRODUCTION ---
-\slidesection{Topic Introduction}
+\slidesection{Background \& Topic Initialization}
 % \section*{Topic Introduction} % Use \section* for unnumbered sections in ToC if desired
 
-\begin{frame}{Topic Introduction}
+\begin{frame}{Background \& Topic Initialization}
     \framesubtitle{Wiesner's Quantum Money: Concept and Challenges}
     \begin{itemize}
         \item \textbf{Quantum Money}: Proposed by Stephen Wiesner around 1970\footnote{S. Wiesner, SIGACT News, 15(1):78–88, 1983.}, it uses quantum mechanics to create unforgeable currency.
@@ -217,44 +217,71 @@ Wiesner’s Quantum Money\\
 \end{frame}
 
 % --- PAPER 2 (Placeholder) ---
-\slidesection{\textbf{topic}\\
-paper name (in different lines?)\\
-\textit{author:sdsfsdfs }\\
-QIC'16
+\slidesection{\textbf{Adaptive Counterfeiting}\\
+\ \ An Adaptive Attack on Wiesner's Quantum Money\ \ \\
+\textit{Daniel Nagaj, Or Sattath, Aharon Brodutch, \& Dominique Unruh}\\
+\ \ \ QIC'16\ \ \
 }
 % \section{Paper 2: Adaptive Attacks & Protocol Vulnerabilities}
 
+% \begin{frame}{Motivation \& Problem Statement}
+%     \framesubtitle{Adaptivity in Quantum Money Validation\footnote{L. Lutomirski, S. Aaronson, et al., arXiv:1404.1507 [quant-ph], 2014.}}
+    
+%     \textbf{Example 1 (from Aaronson–Christ Scheme):}\\
+%     Alice holds a (possibly forged) banknote and submits it for verification.  The bank accepts if and only if \emph{all} measurement outcomes match the recorded state.  
+%     \pause
+    
+%     \textbf{Key Lifecycle Questions:}
+%     \begin{itemize}
+%         \item \emph{Post‐success}: Is the \emph{same} quantum note returned to Alice (or passed onward to honest Bob), \\
+%             or replaced with a \emph{freshly issued} state and serial number?
+%         \item \emph{Post‐failure}: Does Alice get back the (now disturbed) “bad” state for inspection, \\
+%             or is it \emph{destroyed} outright?
+%     \end{itemize}
+%     \pause
+    
+%     \textbf{Attack Model:}
+%     \begin{itemize}
+%         \item Attacker has \emph{one valid note} + \emph{full access} to the bank’s validation routine.
+%         \item Exploits the \emph{projective measurement} in validation via \emph{weak, adaptive probes}.
+%         \item Goal: \emph{Reconstruct} the secret quantum state without triggering rejection.
+%     \end{itemize}
+%     \pause
+
+%     \textbf{Core Insight:}\\
+%     Security depends not only on the no-cloning theorem but crucially on \emph{how} and \emph{when} the banknote is reissued or destroyed.  
+%     \\
+%     \hfill\(\Rightarrow\) \emph{A secure scheme must reissue fresh notes after each successful check, making them non-reusable tokens.}
+% \end{frame}
+
 \begin{frame}{Motivation \& Problem Statement}
-    \framesubtitle{Adaptivity in Quantum Money Validation\footnote{L. Lutomirski, S. Aaronson, et al., arXiv:1404.1507 [quant-ph], 2014.}}
-    
-    \textbf{Example 1 (from Aaronson–Christ Scheme):}\\
-    Alice holds a (possibly forged) banknote and submits it for verification.  The bank accepts if and only if \emph{all} measurement outcomes match the recorded state.  
-    \pause
-    
-    \textbf{Key Lifecycle Questions:}
+    \framesubtitle{Why This Work\footnote{Nagaj et.al, arXiv:1404.1507 [quant-ph], 2014.} Matters}
+
+    \textbf{Question 1: Post-Verification Behavior}\\
+    What happens to a banknote after it passes or fails the bank’s validity test? (critical while often overlooked)
     \begin{itemize}
-        \item \emph{Post‐success}: Is the \emph{same} quantum note returned to Alice (or passed onward to honest Bob), \\
-            or replaced with a \emph{freshly issued} state and serial number?
-        \item \emph{Post‐failure}: Does Alice get back the (now disturbed) “bad” state for inspection, \\
-            or is it \emph{destroyed} outright?
-    \end{itemize}
-    \pause
-    
-    \textbf{Attack Model:}
-    \begin{itemize}
-        \item Attacker has \emph{one valid note} + \emph{full access} to the bank’s validation routine.
-        \item Exploits the \emph{projective measurement} in validation via \emph{weak, adaptive probes}.
-        \item Goal: \emph{Reconstruct} the secret quantum state without triggering rejection.
+        \item \emph{\tt{Post-success}}:  
+            Return the \textbf{same} quantum state to the owner,  
+            or replace it with a \textbf{newly issued} state and serial number?
+        \item \emph{\tt{Post-failure}}:  
+            Return the disturbed “bad” state to the owner,  
+            or destroy it?
     \end{itemize}
     \pause
 
-    \textbf{Core Insight:}\\
-    Security depends not only on the no-cloning theorem but crucially on \emph{how} and \emph{when} the banknote is reissued or destroyed.  
-    \\
-    \hfill\(\Rightarrow\) \emph{A secure scheme must reissue fresh notes after each successful check, making them non-reusable tokens.}
+    \textbf{Question 2: Reconstructing the Secret State}\\
+    Under certain scenario, can an attacker \textbf{reconstruct} the secret quantum state without triggering rejection?
+
+    \begin{itemize}
+        \item \emph{\tt{Scenario}}:  
+            \textbf{Strict testing} protocol \& the attacker is allowed to repeatedly interact with the bank’s verification process
+        \item \emph{\tt{Attack Methods}}:  
+            \begin{itemize}
+                \item BT (Bomb-Testing) attack  
+                \item PM (Protective Measurement) attack
+            \end{itemize}
+    \end{itemize}
 \end{frame}
-
-
 
 \begin{frame}{Nagaj et al.: The "Strict Testing" Scenario}
     \framesubtitle{When Bank Protocols Create Loopholes\footnote{D. Nagaj, O. Sattath, A. Brodutch, and D. Unruh, arXiv:1404.1507v4 [quant-ph], 2016.}}
