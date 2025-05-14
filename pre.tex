@@ -1,0 +1,321 @@
+\documentclass{beamer}
+% \documentclass[handout]{beamer}
+\usepackage{cuhkbeamer}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{algorithm, algpseudocode}
+\usepackage{url}
+\usepackage{amsmath,emoji}
+
+\setbeamertemplate{navigation symbols}{} % Hides navigation symbols
+\setbeamertemplate{footline}[frame number] % Adds frame number
+
+\title[Wiesner's QM Security]{Security Proofs for Private-Key Quantum Money}
+\subtitle{From Optimal Counterfeiting Bounds to Adaptive Attack Vulnerabilities}
+\author[Your Short Name]{
+    LU Haodong, SUN Leyuan, ZHAO Jiachen \& ZHAO Xinpeng \\
+    \vspace{0.1in}
+    \footnotesize{\{hdlu24,lysun0,jczhao23,xpzhao24\}@cse.cuhk.edu.hk} \\
+    \footnotesize{Department of Computer Science \& Engineering}}
+    % \footnotesize{Office: Your Office, CUHK}}
+\institute[CUHK]{The Chinese University of Hong Kong}
+\date{\today}
+
+\begin{document}
+
+% Title page
+\frame[plain]{\maketitle}
+
+% --- TOPIC INTRODUCTION ---
+\slidesection{Topic Introduction}
+% \section*{Topic Introduction} % Use \section* for unnumbered sections in ToC if desired
+
+\begin{frame}{Topic Introduction}
+    \framesubtitle{Wiesner's Quantum Money: Concept and Challenges}
+    \begin{itemize}
+        \item \textbf{Quantum Money}: Proposed by Stephen Wiesner around 1970\footnote{S. Wiesner, SIGACT News, 15(1):78–88, 1983.}, it uses quantum mechanics to create unforgeable currency.
+        \pause
+        \item \textbf{Wiesner's Scheme Core Idea}:
+            \begin{itemize}
+                \item Bank encodes information in qubits using one of two non-orthogonal bases (e.g., rectilinear $\{|0\rangle, |1\rangle\}$ or diagonal $\{|+\rangle, |-\rangle\}$).
+                \item The specific basis choice for each qubit is a secret known only to the bank.
+            \end{itemize}
+        \pause
+        \item \textbf{Security Foundation}: The No-Cloning Theorem\footnote{W. K. Wootters and W. H. Zurek, Nature, 299:802–803, 1982.} --- an unknown quantum state cannot be perfectly copied, ensuring counterfeit detection.
+        \pause
+        \item \textbf{The Nuance}: Theoretical no-cloning is not the whole story. Practical security depends on:
+            \begin{itemize}
+                \item The attacker's capabilities and assumed model.
+                \item The operational protocols of the bank (verification, handling of notes).
+            \end{itemize}
+        \pause
+        \item \textbf{This Talk}: Synthesizes findings from two pivotal analyses.
+    \end{itemize}
+\end{frame}
+
+% --- PAPER 1 ---
+\slidesection{\textbf{Optimal Non-Adaptive Counterfeiting}\\
+\ \ \ Optimal Counterfeiting Attacks and Generalizations for\ \ \ \\
+Wiesner’s Quantum Money\\
+\textit{\ \ \ Abel Molina, Thomas Vidick, and John Watrous\ \ \ }\\
+\ \ \ QCCC'12\ \ \ 
+}
+
+% \section{Paper 1: Optimal Non-Adaptive Counterfeiting}
+
+\begin{frame}{Motivation \& Problem Statement}
+    \framesubtitle{Why This Work\footnote{A. Molina, T. Vidick, and J. Watrous, arXiv:1202.4010v1 [quant-ph], 2012.} Matters}
+    Wiesner's quantum money scheme, introduced in 1969, \textbf{lacked a rigorous quantitative security analysis} against optimal counterfeiters for decades. This work fills that gap.
+    \pause
+    % \begin{itemize}
+        % \item \textbf{Why This Work?}
+        %     \begin{itemize}
+        %         \item Translates the no-cloning intuition into concrete, tight security bounds for quantum money.
+        %         \item Tailors security proofs similar to Quantum Key Distribution (QKD) but specifically for quantum money.
+        %     \end{itemize}
+        % \pause
+        
+        \textbf{$\Rightarrow$ Key Questions Investigated:}
+            \begin{itemize}
+                \item What is the \textbf{optimal success probability} for a "simple counterfeiting attack" (one genuine note $\rightarrow$ two verifiable copies)?
+                \item How do different quantum state ensembles or higher-dimensional systems (\textbf{qudits}) impact security?
+                \item Can secure quantum money schemes with only \textbf{classical} verification be designed, and what is their counterfeit resistance?
+                \item Any \textbf{tools} can unify these analyses?
+            \end{itemize}
+    % \end{itemize}
+\end{frame}
+
+\begin{frame}{Core Tool: SDP in Quantum Information}
+    \framesubtitle{A Powerful Optimization Framework: Semidefinite Programming}
+    The analysis heavily relies on Semidefinite Programming (SDP):
+    \pause
+    \begin{itemize}
+        \item \textbf{SDP Basics}\footnote{L. Vandenberghe and S. Boyd, SIAM Review, 38(1):49–95, 1996.}: \textbf{Optimizes} a linear objective function subject to linear matrix inequalities (LMIs).
+        \item \textbf{Primal Problem Example}:
+        $$ \sup\ \langle C, X \rangle= \mathrm{Tr}(C^\dagger X) \quad \text{s.t. } \mathcal{A}(X) = b, \quad X \succeq 0 $$
+        % where $X \succeq 0$ means $X$ is positive semidefinite.
+        \item A corresponding \textbf{Dual Problem} exists, and strong duality often holds under mild conditions.
+        \pause
+        \item \textbf{Relevance to Quantum Information}\footnote{J. Watrous, The Theory of Quantum Information, Cambridge University Press, 2018.}:
+            \begin{itemize}
+                \item Quantum states (density matrices $\rho$) satisfy $\rho \succeq 0, \mathrm{Tr}(\rho)=1$.
+                \item Quantum operations (channels) can be characterized by PSD operators.
+                \item Many quantum tasks (state discrimination, cloning, optimizing channels) can be formulated as SDPs.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Core Tool: Choi-Jamiolkowski Isomorphism}
+    \framesubtitle{Transforming Channels into Matrices for SDP}
+    Crucial for \textbf{applying} SDP to optimize quantum operations.
+    \pause
+    \begin{itemize}
+        \item Establishes a bijection between a linear map (quantum channel) $\Phi: L(\mathcal{H}_x) \to L(\mathcal{H}_y)$ and its Choi operator $J(\Phi) \in L(\mathcal{H}_y \otimes \mathcal{H}_x)$.
+        \item \textbf{Definition of Choi Operator}\footnote{M.-D. Choi, Lin. Alg. Appl., 10(3):285–290, 1975; A. Jamio{\l}kowski, Rep. Math. Phys., 3(4):275–278, 1972.}:
+        
+        $ J(\Phi) = \sum_{i,j=1}^{d_x} \Phi(|i\rangle\langle j|) \otimes |i\rangle\langle j|,\ \ \{|i\rangle\} \text{: an orthonormal basis for } \mathcal{H}_x. $
+        
+        % \pause
+        \item \textbf{Key Properties for Physical Channels:}
+            \begin{itemize}
+                \item $\Phi$ is \textbf{Completely Positive (CP)} $\iff J(\Phi) \succeq 0$.
+                \item $\Phi$ is \textbf{Trace-Preserving (TP)} $\iff \mathrm{Tr}_y(J(\Phi)) = I_x$.
+            \end{itemize}
+        \pause
+        \item \textbf{Application}: Optimizing over all CPTP channels (e.g., counterfeiting strategies) becomes an SDP over their Choi operators $J(\Phi)$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{SDP Formulation: \\Optimizing the Counterfeiter's Success Probability}
+    \framesubtitle{Modeling the Simple Counterfeiting Attack}
+    In a "simple counterfeiting attack," the attacker, given one genuine note (in state $|\psi_k\rangle$ with probability $p_k$), aims to produce two quantum states in registers $y$ and $z$ that both pass verification.
+    \pause
+    \begin{itemize}
+        \item The attack is modeled as a CPTP quantum channel $\Phi: L(\mathcal{H}_x) \to L(\mathcal{H}_y \otimes \mathcal{H}_z)$.
+        % \pause
+        \item \textbf{Overall Success Probability} (both copies pass independent verification):
+        $$ P_{\text{success}}(\Phi) = \sum_k p_k \langle \psi_k \otimes \psi_k |_{yz}\ \Phi(|\psi_k\rangle\langle\psi_k|_x)\ | \psi_k \otimes \psi_k \rangle_{yz} $$
+        This can be rewritten using the Choi operator $J(\Phi)$ (SDP variable):
+        $$ P_{\text{success}}(\Phi) = \langle Q,X_{\text{Choi}}\rangle,\ X_{\text{Choi}}=J(\Phi)\in L(\mathcal{H}_y \otimes \mathcal{H}_z \otimes \mathcal{H}_x),$$
+        where $Q = \sum_k p_k (|\psi_k\rangle\langle\psi_k|_y \otimes |\psi_k\rangle\langle\psi_k|_z) \otimes (|\psi_k\rangle\langle\psi_k|_x)^*$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{SDP Formulation: \\Optimizing the Counterfeiter's Success Probability}
+    \framesubtitle{Modeling the Simple Counterfeiting Attack}
+    In a "simple counterfeiting attack," the attacker, given one genuine note (in state $|\psi_k\rangle$ with probability $p_k$), aims to produce two quantum states in registers $y$ and $z$ that both pass verification.
+    \begin{itemize}
+        \item \textbf{SDP for Optimal Counterfeiting (Primal Form)}:
+        \begin{align*}
+            \sup \quad & \langle Q, X_{\text{Choi}} \rangle \\
+            \text{s.t.} \quad & \mathrm{Tr}_{\mathcal{H}_y \otimes \mathcal{H}_z}(X_{\text{Choi}}) = I_{X_{\text{Choi}}} \quad (\text{Trace-Preserving}) \\
+            & X_{\text{Choi}} \succeq 0 \quad (\text{Completely Positive})\\
+            &\text{i.e. }X_{\text{Choi}}\in\text{Pos}(\mathcal{H}_y \otimes \mathcal{H}_z \otimes \mathcal{H}_x)
+        \end{align*}
+        where $Q = \sum_k p_k |\psi_k \psi_k \overline{\psi_k} \rangle \langle \psi_k \psi_k \overline{\psi_k} |_{yzx}.$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{SDP Formulation: Dual Problem}
+    \framesubtitle{The Dual Perspective on Optimal Counterfeiting}
+    For every primal SDP, there is a \textbf{corresponding dual SDP}. \\
+    \textit{Strong duality} holds, meaning their optimal values are \textbf{equal}.
+    % \pause
+    \begin{itemize}
+        \item \textbf{Dual SDP Problem}\footnote{Derived using standard SDP duality rules. See Section 3.1 of Molina et al. (2012).}:
+        \begin{align*}
+            \inf \quad & \mathrm{Tr}(Y_{dual}) \\
+            \text{s.t.} \quad & I_{\mathcal{H}_y \otimes \mathcal{H}_z} \otimes Y_{dual} \succeq Q \qquad(\star)\\
+            & Y_{dual} \in \mathrm{Herm}(\mathcal{H}_x)\ \ \qquad(\star\star)
+        \end{align*}
+        Dual to Strong Duality, $\inf{(\mathrm{Tr}(Y_{dual}))=\sup(\langle Q,X_{\text{Choi}}\rangle)}.$
+        % \pause
+        \item \textbf{Interpretation}:
+        \begin{itemize}
+            \item $Y_{dual}$ is an operator on the original banknote's space $\mathcal{H}_x$.
+            \item The constraint $(\star)$ relates $Y_{dual}$ to "target" counterfeiting quality $Q$.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Main Results: \\Quantitative Security Bounds for Quantum Money}
+    \framesubtitle{Exponential Decay in Counterfeiting Success Probability}
+    Using the SDP framework, the authors derived tight bounds on the optimal success probability ($P_{\text{succ}}^{\text{opt}}$) for simple counterfeiting attacks:
+    \pause
+    \begin{itemize}
+        \item \textbf{Wiesner's Original Scheme} ($n$ qubits, quantum verification):
+        $$ P_{\text{succ}}^{\text{opt}} = \left(\frac{3}{4}\right)^n $$
+        \pause
+        \item \textbf{Classical-Verification Analogue} ($n$ qubits, classical challenge):
+        $$ P_{\text{succ}}^{\text{opt}} = \left(\frac{3}{4} + \frac{\sqrt{2}}{8}\right)^n \approx (0.9268)^n $$
+        \pause
+        \item \textbf{Generalizations to $d$-dimensional Qudits}:
+        \begin{itemize}
+            \item Any $d$-dimensional scheme is vulnerable to a counterfeiting attack with success probability at least $\frac{2}{d+1}$.
+            \item The authors present a scheme where this bound is achieved, making it optimal.
+        \end{itemize}
+        \pause
+        \item \textbf{6-State Single-Qubit Scheme} (from Pastawski et al.):
+        $$ P_{\text{succ}}^{\text{opt}} = \left(\frac{2}{3}\right)^n $$
+        This scheme is proven optimal among all repetition-based single-qubit schemes, including Wiesner's.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Significance: Establishing a Rigorous Security Baseline for Quantum Money}
+    \framesubtitle{Key Contributions and Implications}
+    \begin{itemize}
+        \item \textbf{Rigorous Quantification}: First tight, mathematically rigorous bounds for optimal non-adaptive counterfeiting in Wiesner's quantum money.
+        % \pause
+        \item \textbf{Exponential Security}: Demonstrated that the probability of successful counterfeiting decreases exponentially with the number of qubits $n$, ensuring strong security for large $n$.
+        % \pause
+        \item \textbf{Security Baseline}: Provided a foundational understanding of the scheme's inherent security against non-interactive counterfeiting attacks.
+        % \pause
+        \item \textbf{Unified Framework}: Showcased SDP as a powerful tool for analyzing security in quantum cryptographic protocols.
+        % \pause
+        \item \textbf{Design Insights}: Results on qudits and other state ensembles guide the development of more secure or efficient quantum money schemes.
+    \end{itemize}
+\end{frame}
+
+% --- PAPER 2 (Placeholder) ---
+\slidesection{\textbf{topic}\\
+paper name (in different lines?)\\
+\textit{author:sdsfsdfs }\\
+QIC'16
+}
+% \section{Paper 2: Adaptive Attacks & Protocol Vulnerabilities}
+
+\begin{frame}{Motivation \& Problem Statement}
+    \framesubtitle{Adaptivity in Quantum Money Validation\footnote{L. Lutomirski, S. Aaronson, et al., arXiv:1404.1507 [quant-ph], 2014.}}
+    
+    \textbf{Example 1 (from Aaronson–Christ Scheme):}\\
+    Alice holds a (possibly forged) banknote and submits it for verification.  The bank accepts if and only if \emph{all} measurement outcomes match the recorded state.  
+    \pause
+    
+    \textbf{Key Lifecycle Questions:}
+    \begin{itemize}
+        \item \emph{Post‐success}: Is the \emph{same} quantum note returned to Alice (or passed onward to honest Bob), \\
+            or replaced with a \emph{freshly issued} state and serial number?
+        \item \emph{Post‐failure}: Does Alice get back the (now disturbed) “bad” state for inspection, \\
+            or is it \emph{destroyed} outright?
+    \end{itemize}
+    \pause
+    
+    \textbf{Attack Model:}
+    \begin{itemize}
+        \item Attacker has \emph{one valid note} + \emph{full access} to the bank’s validation routine.
+        \item Exploits the \emph{projective measurement} in validation via \emph{weak, adaptive probes}.
+        \item Goal: \emph{Reconstruct} the secret quantum state without triggering rejection.
+    \end{itemize}
+    \pause
+
+    \textbf{Core Insight:}\\
+    Security depends not only on the no-cloning theorem but crucially on \emph{how} and \emph{when} the banknote is reissued or destroyed.  
+    \\
+    \hfill\(\Rightarrow\) \emph{A secure scheme must reissue fresh notes after each successful check, making them non-reusable tokens.}
+\end{frame}
+
+
+
+\begin{frame}{Nagaj et al.: The "Strict Testing" Scenario}
+    \framesubtitle{When Bank Protocols Create Loopholes\footnote{D. Nagaj, O. Sattath, A. Brodutch, and D. Unruh, arXiv:1404.1507v4 [quant-ph], 2016.}}
+    % This slide is intentionally left blank as per request.
+    \vspace{1cm}
+    \centering
+    \textit{(Content for Nagaj et al. paper to be added here, focusing on the adaptive attack model where the bank returns valid money.)}
+\end{frame}
+
+\begin{frame}{Nagaj et al.: Adaptive Attack Strategies}
+    \framesubtitle{Exploiting Verification as an Oracle}
+    % This slide is intentionally left blank as per request.
+    \vspace{1cm}
+    \centering
+    \textit{(Content for Nagaj et al. paper to be added here, detailing Bomb-Testing and Protective Measurement attacks.)}
+\end{frame}
+
+% --- CONCLUSION ---
+\slidesection*{Conclusion}
+
+\begin{frame}{Conclusion}
+    \framesubtitle{Wiesner's Quantum Money: A Multifaceted Security Landscape}
+    The security of Wiesner's quantum money is not absolute but depends critically on the assumed adversarial model and bank's operational protocols.
+    \pause
+    \begin{itemize}
+        \item \textbf{Non-Adaptive Attacks (Molina et al.)}:
+            \begin{itemize}
+                \item Wiesner's scheme exhibits strong, \textit{exponentially decaying} security (e.g., $(3/4)^n$) against optimal "simple counterfeiting" where the attacker has no intermediate interaction with the bank.
+                \item This provides a fundamental \textbf{baseline security} for the quantum states themselves.
+            \end{itemize}
+        \pause
+        \item \textbf{Adaptive Attacks (Nagaj et al. - to be detailed)}:
+            \begin{itemize}
+                \item If bank protocols (like returning valid notes) allow for repeated, informative interactions, the scheme can become vulnerable.
+            \end{itemize}
+        \pause
+        \item \textbf{Overall Implication}: Secure quantum money requires both robust quantum encodings \textit{and} carefully designed, attack-resistant verification and handling procedures.
+    \end{itemize}
+\end{frame}
+
+% --- RELATED WORKS (Placeholder) ---
+\slidesection*{Related Works}
+
+\begin{frame}{Related Works}
+    \framesubtitle{Further Research and Context}
+    % This slide is intentionally left blank as per request.
+    \vspace{1cm}
+    \centering
+    \textit{(This section could briefly mention other quantum money schemes, advancements in security proofs, or practical implementation challenges.)}
+\end{frame}
+
+% --- REFERENCES (Optional: Footnotes are primary in this version) ---
+% \section*{References}
+% \begin{frame}[allowframebreaks]{References}
+%   % If you want a final slide with all footnote sources listed,
+%   % you would manually compile them here or use a .bib file with \bibliography
+%   \begin{itemize}
+%       \item Molina, A., Vidick, T., \& Watrous, J. (2012). Optimal counterfeiting attacks and generalizations for Wiesner’s quantum money. \textit{arXiv:1202.4010v1}.
+%       \item Nagaj, D., Sattath, O., Brodutch, A., \& Unruh, D. (2016). An adaptive attack on Wiesner’s quantum money. \textit{arXiv:1404.1507v4}.
+%       \item ... (and other footnotes)
+%   \end{itemize}
+% \end{frame}
+
+\end{document}

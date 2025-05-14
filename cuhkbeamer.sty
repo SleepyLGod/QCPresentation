@@ -31,7 +31,7 @@
 \usetikzlibrary{patterns}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
-\defaultfontfeatures{Mapping=tex-text}
+% \defaultfontfeatures{Mapping=tex-text}
 
 
 
@@ -109,7 +109,11 @@
 \newcommand{\slidesection}[1]{
     \section{#1}
     \begin{frame}[c]{}
-        \LARGE{Part \thesection. #1}
+        \resizebox{\textwidth}{!}{%
+            \begin{tabular}{@{}c@{}}
+                Part \thesection. #1
+            \end{tabular}%
+        }
     \end{frame}
 }
 \newcommand{\emphacolor}[1]{\textbf{\textcolor{cuhkpurple}{#1}}}
